@@ -77,14 +77,19 @@ self.addEventListener('fetch', evt => {
                             }
                             return response
                         })
-                        .catch(async err => {
-
+                        .catch(err => {
                             console.log("HEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEEEE")
-                            const cacheData = cache.match(evt.request)
-                            const responseData = await getFromIDB()
-                            responseData.reverse()
-                            responseData.push(cacheData)
-                            return responseData
+                            return cache.match(evt.request)
+                                .then(async cache => {
+                                    const { body, ...theRest } = cache
+                                    console.log( body, theRest)
+                                    const cacheData = await cache.json()
+                                    const responseData = await getFromIDB()
+                                    responseData.reverse()
+                                    console.log(responseData.concat(cacheData))
+                                    const newBody = JSON.stringify(responseData.concat(cacheData))
+                                    return new Response(newBody, theRest)
+                                })
                         })
                 })
                 .catch(err => console.log(err))
