@@ -22,6 +22,7 @@ router.post("/api/transaction/bulk", ({body}, res) => {
 });
 
 router.get("/api/transaction", (req, res) => {
+  console.log("why hello")
   Transaction.find({}).sort({date: -1})
     .then(dbTransaction => {
       res.json(dbTransaction);

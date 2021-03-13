@@ -1,0 +1,100 @@
+console.log('hey you guys')
+
+const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v2'
+const DATA_CACHE_NAME = 'BudgetTrackerData-v1'
+
+const FILES_TO_CACHE = [
+    '/',
+    '/index.html',
+    '/css/styles.css',
+    '/js/index.js',
+    '/js/idb.js',
+    '/icons/icon-192x192.png',
+    'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+]
+
+self.addEventListener('install', e => {
+    console.log("hello from install")
+    e.waitUntil(
+        caches.open(STATIC_CACHE_NAME).then(cache => {
+            console.log('installing cache: ' + STATIC_CACHE_NAME)
+            cache.addAll(FILES_TO_CACHE)
+        })        
+    )
+
+    self.skipWaiting()
+})
+
+self.addEventListener('activate', evt => {
+    console.log("and now hello from activation")
+    evt.waitUntil(
+        caches.keys().then(keys => {
+            console.log(keys)
+            return Promise.all(
+                keys.map(key => {
+                    if (key !== STATIC_CACHE_NAME && key !== DATA_CACHE_NAME) {
+                        console.log('Removing old cache data', key)
+                        return caches.delete(key)
+                    }
+                })
+            )
+        })
+    )
+
+    self.clients.claim()
+})
+
+function getFromIDB() {
+    return new Promise( res => {
+        const request = indexedDB.open('budget-tracker', 1)
+        request.onsuccess = event => {
+            const db = event.target.result
+            const transaction = db.transaction(['new_transaction'], 'readwrite')
+            const transactionObjectStore = transaction.objectStore('new_transaction')
+            const getAll = transactionObjectStore.getAll()
+
+            getAll.onsuccess = function() {
+                res(getAll.result)
+            }                 
+        }
+    })
+  
+}
+
+self.addEventListener('fetch', evt => {
+    // console.log('fetch event', evt)
+
+    if (evt.request.url.includes('/api/') && evt.request.method === 'GET') {
+        console.log("here>?????????")
+        evt.respondWith(
+            caches  
+                .open(DATA_CACHE_NAME)
+                .then(cache => {
+                    return fetch(evt.request)
+                        .then(response => {
+                            if (response.status === 200) {
+                                cache.put(evt.request.url, response.clone())
+                            }
+                            return response
+                        })
+                        .catch(async err => {
+
+                            console.log("HEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEEEE")
+                            const cacheData = cache.match(evt.request)
+                            const responseData = await getFromIDB()
+                            responseData.reverse()
+                            responseData.push(cacheData)
+                            return responseData
+                        })
+                })
+                .catch(err => console.log(err))
+        )
+        return
+    }
+
+    evt.respondWith(
+        caches.match(evt.request).then(cacheRes => {
+            return cacheRes || fetch(evt.request)
+        })
+    )
+})
