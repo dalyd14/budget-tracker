@@ -1,6 +1,6 @@
 console.log('hey you guys')
 
-const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v2'
+const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v1'
 const DATA_CACHE_NAME = 'BudgetTrackerData-v1'
 
 const FILES_TO_CACHE = [
@@ -58,12 +58,9 @@ function getFromIDB() {
             }                 
         }
     })
-  
 }
 
 self.addEventListener('fetch', evt => {
-    // console.log('fetch event', evt)
-
     if (evt.request.url.includes('/api/') && evt.request.method === 'GET') {
         console.log("here>?????????")
         evt.respondWith(
@@ -81,14 +78,11 @@ self.addEventListener('fetch', evt => {
                             console.log("HEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEEEE")
                             return cache.match(evt.request)
                                 .then(async cache => {
-                                    const { body, ...theRest } = cache
-                                    console.log( body, theRest)
                                     const cacheData = await cache.json()
                                     const responseData = await getFromIDB()
                                     responseData.reverse()
-                                    console.log(responseData.concat(cacheData))
                                     const newBody = JSON.stringify(responseData.concat(cacheData))
-                                    return new Response(newBody, theRest)
+                                    return new Response(newBody, { status : 200 , statusText : "OK" })
                                 })
                         })
                 })
