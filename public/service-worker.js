@@ -1,7 +1,5 @@
-console.log('hey you guys')
-
-const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v1'
-const DATA_CACHE_NAME = 'BudgetTrackerData-v1'
+const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v2'
+const DATA_CACHE_NAME = 'BudgetTrackerData-v2'
 
 const FILES_TO_CACHE = [
     '/',
@@ -14,7 +12,6 @@ const FILES_TO_CACHE = [
 ]
 
 self.addEventListener('install', e => {
-    console.log("hello from install")
     e.waitUntil(
         caches.open(STATIC_CACHE_NAME).then(cache => {
             console.log('installing cache: ' + STATIC_CACHE_NAME)
@@ -26,7 +23,6 @@ self.addEventListener('install', e => {
 })
 
 self.addEventListener('activate', evt => {
-    console.log("and now hello from activation")
     evt.waitUntil(
         caches.keys().then(keys => {
             console.log(keys)
@@ -62,7 +58,6 @@ function getFromIDB() {
 
 self.addEventListener('fetch', evt => {
     if (evt.request.url.includes('/api/') && evt.request.method === 'GET') {
-        console.log("here>?????????")
         evt.respondWith(
             caches  
                 .open(DATA_CACHE_NAME)
@@ -75,7 +70,6 @@ self.addEventListener('fetch', evt => {
                             return response
                         })
                         .catch(err => {
-                            console.log("HEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEEEE")
                             return cache.match(evt.request)
                                 .then(async cache => {
                                     const cacheData = await cache.json()
