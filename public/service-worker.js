@@ -1,5 +1,5 @@
-const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v1'
-const DATA_CACHE_NAME = 'BudgetTrackerData-v1'
+const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v2'
+const DATA_CACHE_NAME = 'BudgetTrackerData-v2'
 
 const FILES_TO_CACHE = [
     '/',
