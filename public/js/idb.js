@@ -46,6 +46,8 @@ async function syncOfflineTransactions() {
             const transaction = db.transaction(['new_transaction'], 'readwrite')
             const transactionObjectStore = transaction.objectStore('new_transaction')
             transactionObjectStore.clear()
+
+            window.location.reload()
         }) 
         .catch(err => {
             console.log(err)
