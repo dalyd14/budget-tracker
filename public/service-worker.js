@@ -90,5 +90,8 @@ self.addEventListener('fetch', evt => {
         caches.match(evt.request).then(cacheRes => {
             return cacheRes || fetch(evt.request)
         })
+        .catch((err) => {
+            return caches.match('index.html')
+        })
     )
 })
