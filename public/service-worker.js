@@ -1,5 +1,5 @@
-const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v2'
-const DATA_CACHE_NAME = 'BudgetTrackerData-v2'
+const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v1'
+const DATA_CACHE_NAME = 'BudgetTrackerData-v1'
 
 const FILES_TO_CACHE = [
     '/',
@@ -7,6 +7,7 @@ const FILES_TO_CACHE = [
     '/css/styles.css',
     '/js/index.js',
     '/js/idb.js',
+    '/manifest.json',
     '/icons/icon-192x192.png',
     'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
 ]
