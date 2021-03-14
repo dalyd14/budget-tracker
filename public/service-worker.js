@@ -1,5 +1,5 @@
-const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v2'
-const DATA_CACHE_NAME = 'BudgetTrackerData-v2'
+const STATIC_CACHE_NAME = 'BudgetTrackerStatic-v1'
+const DATA_CACHE_NAME = 'BudgetTrackerData-v1'
 
 const FILES_TO_CACHE = [
     '/',
@@ -16,7 +16,6 @@ self.addEventListener('install', e => {
     e.waitUntil(
         caches.open(STATIC_CACHE_NAME).then(cache => {
             console.log('installing cache: ' + STATIC_CACHE_NAME)
-            alert('installing cache: ' + STATIC_CACHE_NAME)
             cache.addAll(FILES_TO_CACHE)
         })        
     )
