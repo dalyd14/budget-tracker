@@ -16,6 +16,7 @@ self.addEventListener('install', e => {
     e.waitUntil(
         caches.open(STATIC_CACHE_NAME).then(cache => {
             console.log('installing cache: ' + STATIC_CACHE_NAME)
+            alert('installing cache: ' + STATIC_CACHE_NAME)
             cache.addAll(FILES_TO_CACHE)
         })        
     )
@@ -91,7 +92,7 @@ self.addEventListener('fetch', evt => {
             return cacheRes || fetch(evt.request)
         })
         .catch((err) => {
-            return caches.match('index.html')
+            return caches.match('/index.html')
         })
     )
 })
