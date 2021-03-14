@@ -92,7 +92,9 @@ self.addEventListener('fetch', evt => {
             return cacheRes || fetch(evt.request)
         })
         .catch((err) => {
-            return caches.match('/index.html')
+            caches.match('/index.html').then(cacheRes => {
+                return cacheRes
+            })
         })
     )
 })
